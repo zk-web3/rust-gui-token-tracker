@@ -1,0 +1,34 @@
+{
+  "name": "ethereum-token-tracker",
+  "version": "0.1.0",
+  "description": "A modern desktop application for tracking Ethereum wallet balances and ERC-20 tokens",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cargo tauri dev",
+    "build": "cargo tauri build",
+    "preview": "cargo tauri dev --no-watch"
+  },
+  "keywords": [
+    "ethereum",
+    "blockchain",
+    "wallet",
+    "tokens",
+    "rust",
+    "tauri",
+    "desktop-app"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.5.0"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/rust-gui-token-tracker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/rust-gui-token-tracker/issues"
+  },
+  "homepage": "https://github.com/yourusername/rust-gui-token-tracker#readme"
+} 

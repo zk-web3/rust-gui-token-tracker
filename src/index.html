@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Token Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <h1>Ethereum Token Tracker</h1>
+                </div>
+                <p class="subtitle">Track your ETH and ERC-20 token balances in real-time</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="search-section">
+                <div class="input-group">
+                    <label for="wallet-address">Wallet Address</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="wallet-address" 
+                            placeholder="Enter Ethereum wallet address (0x...)"
+                            autocomplete="off"
+                        >
+                        <button id="search-btn" class="search-btn">
+                            <i class="fas fa-search"></i>
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Fetching wallet data...</p>
+            </div>
+
+            <div id="error" class="error hidden">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p id="error-message"></p>
+            </div>
+
+            <div id="results" class="results hidden">
+                <div class="wallet-info">
+                    <div class="wallet-header">
+                        <i class="fas fa-user-circle"></i>
+                        <div class="wallet-details">
+                            <h2 id="wallet-address-display"></h2>
+                            <p class="wallet-label">Wallet Address</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="balances-section">
+                    <div class="balance-card eth-balance">
+                        <div class="balance-header">
+                            <div class="token-icon">
+                                <i class="fab fa-ethereum"></i>
+                            </div>
+                            <div class="token-info">
+                                <h3>Ethereum (ETH)</h3>
+                                <p>Native token</p>
+                            </div>
+                        </div>
+                        <div class="balance-amount">
+                            <span id="eth-balance">0.000000</span>
+                            <span class="currency">ETH</span>
+                        </div>
+                    </div>
+
+                    <div class="tokens-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-coins"></i>
+                            ERC-20 Tokens
+                        </h3>
+                        <div id="tokens-grid" class="tokens-grid">
+                            <!-- Token cards will be inserted here -->
+                        </div>
+                        <div id="no-tokens" class="no-tokens hidden">
+                            <i class="fas fa-inbox"></i>
+                            <p>No ERC-20 tokens found in this wallet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="welcome" class="welcome">
+                <div class="welcome-content">
+                    <i class="fas fa-search-dollar"></i>
+                    <h2>Ready to track your wallet?</h2>
+                    <p>Enter an Ethereum wallet address above to view real-time balances of ETH and popular ERC-20 tokens.</p>
+                    <div class="example-addresses">
+                        <p><strong>Example addresses to try:</strong></p>
+                        <ul>
+                            <li>Vitalik Buterin: <code>0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045</code></li>
+                            <li>Binance Hot Wallet: <code>0x28C6c06298d514Db089934071355E5743bf21d60</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Ethereum Token Tracker. Built with Rust + Tauri</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
