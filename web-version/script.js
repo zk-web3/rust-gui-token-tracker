@@ -1,26 +1,3 @@
-// Check if ethers.js is loaded
-if (typeof ethers === 'undefined') {
-    console.error('Ethers.js not loaded!');
-    document.body.innerHTML = `
-        <div style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
-            <h1>❌ Error: Ethers.js not loaded</h1>
-            <p>Please check your internet connection and refresh the page.</p>
-            <button onclick="location.reload()">Refresh Page</button>
-        </div>
-    `;
-}
-
-// Web3 provider setup
-const provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/7ec33be3e39348b6b5f83d0ac83bc2f4');
-
-// ERC-20 ABI for balanceOf function
-const ERC20_ABI = [
-    "function balanceOf(address owner) view returns (uint256)",
-    "function decimals() view returns (uint8)",
-    "function symbol() view returns (string)",
-    "function name() view returns (string)"
-];
-
 // DOM elements
 const walletAddressInput = document.getElementById('wallet-address');
 const searchBtn = document.getElementById('search-btn');
@@ -36,18 +13,6 @@ const noTokensDiv = document.getElementById('no-tokens');
 
 // State
 let isSearching = false;
-
-// Common ERC-20 token addresses on Ethereum mainnet
-const TOKENS = [
-    { symbol: 'USDT', address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', name: 'Tether USD' },
-    { symbol: 'USDC', address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', name: 'USD Coin' },
-    { symbol: 'DAI', address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', name: 'Dai Stablecoin' },
-    { symbol: 'WETH', address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', name: 'Wrapped Ether' },
-    { symbol: 'UNI', address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', name: 'Uniswap' },
-    { symbol: 'LINK', address: '0x514910771AF9Ca656af840dff83E8264EcF986CA', name: 'Chainlink' },
-    { symbol: 'AAVE', address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9', name: 'Aave' },
-    { symbol: 'COMP', address: '0xc00e94Cb662C3520282E6f5717214004A7f26888', name: 'Compound' }
-];
 
 // Utility functions
 function showElement(element) {
