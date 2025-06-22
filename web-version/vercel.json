@@ -27,7 +27,11 @@
   ],
   "rewrites": [
     {
-      "source": "/:path((?!api/|.*\\.).*)",
+      "source": "/api/(.*)",
+      "destination": "/api/get-wallet-data"
+    },
+    {
+      "source": "/:path((?!api|static|favicon.ico|manifest.json|robots.txt).*)",
       "destination": "/index.html"
     }
   ]
