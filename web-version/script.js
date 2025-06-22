@@ -134,18 +134,18 @@ function validateAddress(address) {
 async function getWalletData(address) {
     try {
         const response = await fetch(`/api/get-wallet-data?address=${address}`);
-        
+        const data = await response.json(); // Always parse the JSON to get the error message
+
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `Request failed with status ${response.status}`);
+            // Use the specific error message from the backend API
+            throw new Error(data.error || `Request failed with status ${response.status}`);
         }
         
-        const walletData = await response.json();
-        return walletData;
+        return data;
     } catch (error) {
         console.error('Error fetching wallet data from API:', error);
-        // Pass a user-friendly error message to the UI
-        throw new Error(`Failed to fetch wallet data. Please try again later.`);
+        // Re-throw the specific error message to be displayed in the UI
+        throw new Error(error.message);
     }
 }
 

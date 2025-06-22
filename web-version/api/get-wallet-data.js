@@ -19,32 +19,39 @@ const TOKENS = [
 ];
 
 module.exports = async (request, response) => {
+    // 1. Check for API Key (Environment Variable)
+    if (!process.env.ETHEREUM_RPC_URL) {
+        console.error("SERVER_ERROR: ETHEREUM_RPC_URL environment variable is not set.");
+        return response.status(500).json({ error: 'Server Error: The application is not configured correctly. Missing API Key.' });
+    }
+    
     const { address } = request.query;
 
-    if (!process.env.ETHEREUM_RPC_URL) {
-        console.error("ETHEREUM_RPC_URL environment variable is not set.");
-        return response.status(500).json({ error: 'Server configuration error: RPC URL is missing.' });
-    }
-
+    // 2. Validate Wallet Address
     if (!address || !ethers.utils.isAddress(address)) {
-        return response.status(400).json({ error: 'Invalid Ethereum address provided.' });
+        return response.status(400).json({ error: 'Client Error: Invalid or missing Ethereum wallet address.' });
     }
 
+    // 3. Connect to the blockchain
+    let provider;
     try {
-        const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
+        provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
+    } catch (e) {
+        console.error("SERVER_ERROR: Failed to create ethers provider.", e);
+        return response.status(500).json({ error: 'Server Error: Could not connect to the blockchain provider.' });
+    }
 
+    // 4. Fetch data
+    try {
         const [ethBalance, tokenBalances] = await Promise.all([
             provider.getBalance(address),
             Promise.all(TOKENS.map(async (token) => {
                 try {
                     const contract = new ethers.Contract(token.address, ERC20_ABI, provider);
                     const balance = await contract.balanceOf(address);
-
                     if (balance.isZero()) return null;
-
                     const decimals = await contract.decimals();
                     const balanceFloat = parseFloat(ethers.utils.formatUnits(balance, decimals));
-                    
                     return {
                         symbol: token.symbol,
                         name: token.name,
@@ -52,26 +59,23 @@ module.exports = async (request, response) => {
                         contract_address: token.address
                     };
                 } catch (error) {
-                    console.warn(`Error fetching ${token.symbol} for ${address}:`, error.message);
+                    console.warn(`Token Fetch Error for ${token.symbol}:`, error.message);
                     return null;
                 }
             }))
         ]);
         
-        const ethBalanceFormatted = ethers.utils.formatEther(ethBalance);
-        const validTokenBalances = tokenBalances.filter(b => b !== null);
-
         const walletData = {
             address: address,
-            eth_balance: parseFloat(ethBalanceFormatted).toFixed(6),
-            token_balances: validTokenBalances
+            eth_balance: parseFloat(ethers.utils.formatEther(ethBalance)).toFixed(6),
+            token_balances: tokenBalances.filter(b => b !== null)
         };
         
         response.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
         return response.status(200).json(walletData);
 
     } catch (error) {
-        console.error(`Error fetching wallet data for ${address}:`, error);
-        return response.status(500).json({ error: 'Failed to fetch wallet data from the provider.' });
+        console.error(`PROVIDER_ERROR for address ${address}:`, error);
+        return response.status(500).json({ error: 'Provider Error: Failed to fetch data. The API key may be invalid or the service may be down.' });
     }
 }; 
