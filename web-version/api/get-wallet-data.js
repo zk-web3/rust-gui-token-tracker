@@ -18,8 +18,13 @@ const TOKENS = [
     { symbol: 'COMP', address: '0xc00e94Cb662C3520282E6f5717214004A7f26888', name: 'Compound' }
 ];
 
-export default async function handler(request, response) {
+module.exports = async (request, response) => {
     const { address } = request.query;
+
+    if (!process.env.ETHEREUM_RPC_URL) {
+        console.error("ETHEREUM_RPC_URL environment variable is not set.");
+        return response.status(500).json({ error: 'Server configuration error: RPC URL is missing.' });
+    }
 
     if (!address || !ethers.utils.isAddress(address)) {
         return response.status(400).json({ error: 'Invalid Ethereum address provided.' });
@@ -66,7 +71,7 @@ export default async function handler(request, response) {
         return response.status(200).json(walletData);
 
     } catch (error) {
-        console.error(`Error fetching data for ${address}:`, error.message);
-        return response.status(500).json({ error: 'Failed to fetch wallet data.' });
+        console.error(`Error fetching wallet data for ${address}:`, error);
+        return response.status(500).json({ error: 'Failed to fetch wallet data from the provider.' });
     }
-} 
+}; 
